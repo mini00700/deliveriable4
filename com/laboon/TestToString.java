@@ -20,7 +20,7 @@ public class TestToString {
 	
 	//This one can test the base case which is a small size.
 	@Test
-	public void TestSmallSize(){
+	public void TestBaseCase1(){
 		World testworld = new World(1,20,30);
 		
 		//I just want to test size. So I need to remove the effect of other method first.
@@ -29,16 +29,20 @@ public class TestToString {
 		when(cell.getStateRep()).thenReturn('X'); 
 		testworld._world[0][0]=cell;
 		String result = testworld.toString();
+		//it should use getstatetrep method for only one time.
 		verify(cell,times(1)).getStateRep();
+		//it should return "  0\n0 X\n".
 		assertEquals(result,"  0\n0 X\n");
 	}
 	
 	
-	//This one can 
+	//This one test the normal size which is 40.
 	@Test
-	public void TestBaseCase1(){
+	public void TestBaseCase2(){
 		World testworld = new World(40,20,30);
 		
+		//Each mocked cell will have a return value.
+		//So I set each time when use getstaterep method it will return 'X'.
 		for(int i=0;i<40;i++){
 			for(int j=0;j<40;j++){
 				Cell cell = mock(Cell.class);
@@ -48,14 +52,19 @@ public class TestToString {
 		}
 		
 		String r = testworld.toString();
+		//The result is to long to predict. So we just look the first line of the result by using split method.
 		String[] result=r.split("\n");
 		assertEquals(result[0],"  0123456789012345678901234567890123456789");
 		
 	}
 	
+	//This one test a large size which is 1000. 
 	@Test
-	public void TestBaseCase2(){
+	public void TestLargeSize(){
 		World testworld = new World(1000,20,30);
+		
+		//Each mocked cell will have a return value.
+		//So I set each time when use getstaterep method it will return 'X'.
 		for(int i=0;i<40;i++){
 			for(int j=0;j<40;j++){
 				Cell cell = mock(Cell.class);
@@ -64,6 +73,7 @@ public class TestToString {
 			}
 		} 
 		String r = testworld.toString();
+		//The result is to long to predict. So we just look the content before the number 9 of the result by using split method.
 		String[] result=r.split("9");
 		assertEquals(result[0],"  012345678");
 		
